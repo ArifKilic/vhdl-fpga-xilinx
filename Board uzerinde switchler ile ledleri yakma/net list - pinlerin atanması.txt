@@ -1,0 +1,7 @@
+net "switches(0)" loc="E12";
+net "switches(1)" loc="D14";
+net "reset" loc="V13";
+net "clk" loc="V10";
+
+net "ledler(0)" loc="C4";
+net "ledler(1)" loc="A4";

@@ -1,0 +1,39 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+
+
+entity LED_Blink_VHDL_deneme is
+	port(CLK_27Mhz : in std_logic; --giris ve çikislar
+	LED : out std_logic);
+end LED_Blink_VHDL_deneme;
+
+-- osilatorumuz 27 khz degerinde. ve 1 hz sinyal uretmek 
+-- icin osilatorumuzun degerini 2 ye bolecegiz.
+-- clock sinyalimizin yarisinda 1 hz için yükselisi,
+-- diger yarisinda ise düsüsü temsil edecek.
+
+-- output olarak konumlandirilan pini okuyamayiz.
+
+architecture Behavioral of LED_Blink_VHDL_deneme is
+	signal counter : std_logic_vector(23 downto 0); --global variables
+	signal CLK_1Hz : std_logic;
+begin
+	Prescaler : process (CLK_27Mhz)
+	begin 
+		if rising_edge(CLK_27Mhz) then --her yükselen kenarda buraya girecek
+			if counter<"110011011111111001100000" then --13500000 e kadar her sayisinda sayiciyi artiriyoruz
+				counter<=counter+1;
+			else -- eger sayici 13500000 ü geçmisse diger 13500000 lük kisim için ledin durumunu tersliyoruz.Yaniksa sönük, sönükse yanik olacak
+				CLK_1Hz<= not CLK_1Hz;
+				counter<= (others=>'0');--tüm bitlerine 0 yaziyor çünkü sayiciyi sifirlamaliyiz.
+			end if;
+		end if;
+		LED<=CLK_1Hz;
+	
+	end process Prescaler;
+end Behavioral;
+
+

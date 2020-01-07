@@ -1,0 +1,159 @@
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+----------------------------------------------
+----------------ve kapisi için entity ---------
+entity ve_kapisi is
+	port ( ve_giris1 : in std_logic;
+			 ve_giris2 : in std_logic;
+			 ve_cikisi : out std_logic);
+			 
+end ve_kapisi;
+
+architecture Behavioral of ve_kapisi is
+	
+begin
+	process(ve_giris1,ve_giris2) -- girisler tetiklendiginde process çalismayua baslicak
+	begin
+		ve_cikisi <= ve_giris1 and ve_giris2;
+		
+		
+	end process;
+
+end Behavioral;
+
+-------------------------------------------------------
+----------------  XOR IÇIN ----------------------------
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+
+entity xor_kapisi is
+	port ( xor_giris1 : in std_logic;
+			 xor_giris2 : in std_logic;
+			 xor_cikisi : out std_logic);
+			 
+end xor_kapisi;
+
+architecture Behavioral of xor_kapisi is
+	
+begin
+	process(xor_giris1,xor_giris2) -- girisler tetiklendiginde process çalismayua baslicak
+	begin
+		xor_cikisi <= xor_giris1 xor xor_giris2;
+		
+		
+	end process;
+
+end Behavioral;
+
+--------------------------------------------
+--------yari toplayici -----------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity yari_toplayici is
+	port(yari_giris1 : in std_logic; yari_giris2 : in std_logic;
+			yari_toplam : out std_logic;
+			yari_elde_ciktisi : out std_logic);
+			
+end yari_toplayici;
+
+
+architecture yapisal_tasarim of yari_toplayici is
+
+
+	component xor_kapisi is
+		port ( xor_giris1 : in std_logic;
+				xor_giris2 : in std_logic;
+				xor_cikisi : out std_logic);	
+	end component;
+	
+	
+	
+	component ve_kapisi is
+		port ( ve_giris1 : in std_logic;
+				ve_giris2 : in std_logic;
+				ve_cikisi : out std_logic);
+	end component;
+begin
+	blok1: xor_kapisi port map(xor_giris1=> yari_giris1, xor_giris2=> yari_giris2, xor_cikisi=>yari_toplam);
+	blok2: ve_kapisi  port map(ve_giris1=> yari_giris1, ve_giris2=>yari_giris2, ve_cikisi=>yari_elde_ciktisi);
+-- tüm bloklarin tasarimi yari toplayicinin sematigine bakilarak yapildi.
+-- yollar nereye baglaniyorsa ayni sekilde sinyal olarak da kodda oraya baglanmali
+end yapisal_tasarim;
+
+
+------------------------------------------------------------
+---------------------veya kapisi----------------------------
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity veya_kapisi is
+	port ( veya_giris1 : in std_logic;
+			 veya_giris2 : in std_logic;
+			 veya_cikisi : out std_logic);
+			 
+end veya_kapisi;
+
+architecture Behavioral of veya_kapisi is
+	
+begin
+	process(veya_giris1,veya_giris2) -- girisler tetiklendiginde process çalismayua baslicak
+	begin
+		veya_cikisi <= veya_giris1 or veya_giris2;
+		
+	end process;
+
+end Behavioral;
+
+------------------------------------------------------
+-------------- tam toplayici --------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- iki componentimiz var burada - or ve half adder
+
+entity tam_toplayici is
+	port( tt_g1 : in std_logic;
+			tt_g2 : in std_logic;
+			tt_elde_girisi : in std_logic;
+			tt_toplam : out std_logic;
+			tt_elde_cikisi: out std_logic);
+end tam_toplayici;
+
+architecture yapisal of tam_toplayici is
+	component yari_toplayici is
+		port(yari_giris1 : in std_logic; yari_giris2 : in std_logic;
+			yari_toplam : out std_logic;
+			yari_elde_ciktisi : out std_logic);
+	end component;
+	
+	component veya_kapisi is
+		port ( veya_giris1 : in std_logic;
+			 veya_giris2 : in std_logic;
+			 veya_cikisi : out std_logic);
+	end component;
+	
+	signal ara_kablo1: std_logic;
+	signal ara_kablo2: std_logic;
+	signal ara_kablo3: std_logic;
+	
+begin
+	blok1 : yari_toplayici  port map(yari_giris1=>tt_g1, yari_giris2=>tt_g2, yari_elde_ciktisi=>ara_kablo1, yari_toplam=>ara_kablo2);
+	blok2 : yari_toplayici	port map(yari_giris1=>ara_kablo2, yari_giris2=>tt_elde_girisi, yari_elde_ciktisi=>ara_kablo3, yari_toplam=>tt_toplam);
+	blok3 : veya_kapisi 		port map(veya_giris1=>ara_kablo1, veya_giris2=>ara_kablo3, veya_cikisi=>tt_elde_cikisi);
+end yapisal;
+
+
+
+

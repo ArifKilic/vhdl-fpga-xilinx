@@ -1,0 +1,33 @@
+entity switchlerle_board_ledi_yakma is
+	port (switches : in std_logic_vector (1 downto 0);
+	reset : in std_logic;
+	clk : in std_logic;
+	ledler : out std_logic_vector(1 downto 0));
+end switchlerle_board_ledi_yakma;
+
+architecture Behavioral of switchlerle_board_ledi_yakma is
+	
+begin
+	arif : process (clk)
+		begin
+			if switches(0)='1' then
+				ledler(0)<='1';
+			else 
+				ledler(0)<='0';
+			end if;
+			
+			
+			if switches(1)='1' then
+				ledler(1)<='1';
+			else
+				ledler(1)<='0';
+			end if;
+			
+			
+			if reset='1' then
+				ledler<=(others=>'0');
+			end if;
+		end process arif;
+
+end Behavioral;
+
